@@ -89,7 +89,19 @@ end
 When /^(?:|I )check "([^"]*)"$/ do |field|
   check(field)
 end
+=begin
+When  /^(?:|I) check the following ratings:$/ do |ratings|
+	ratings.each do |rating|
+		check(rating)
+	end
+end
 
+When  /^(?:|I) uncheck the following ratings:$/ do |ratings|
+	ratings.each do |rating|
+		uncheck(rating)
+	end
+end
+=end
 When /^(?:|I )uncheck "([^"]*)"$/ do |field|
   uncheck(field)
 end
@@ -109,7 +121,17 @@ Then /^(?:|I )should see "([^"]*)"$/ do |text|
     assert page.has_content?(text)
   end
 end
-
+=begin
+Then  /^(?:|I) should see:$/ do |texts|
+  texts.each do |text|
+  	if page.respond_to? :should
+    	page.should have_content(text)
+  	else
+    	assert page.has_content?(text)
+  	end
+  end
+end
+=end
 Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
 
@@ -127,7 +149,17 @@ Then /^(?:|I )should not see "([^"]*)"$/ do |text|
     assert page.has_no_content?(text)
   end
 end
-
+=begin
+Then /^(?:|I )should not see:$/ do |texts|
+  texts.each do |text|
+  if page.respond_to? :should
+    page.should have_no_content(text)
+  else
+    assert page.has_no_content?(text)
+  end
+  end
+end
+=end
 Then /^(?:|I )should not see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
 
@@ -226,7 +258,17 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label
     end
   end
 end
- 
+
+
+Then /^I should see all of the movies/ do 
+
+	ls = ["Aladdin","The Terminator","When Harry Met Sally","The Help","Chocolat","Amelie","2001: A Space Odyssey","The Incredibles","Raiders of the Lost Ark","Chicken Run"]
+	ls.each do |i|
+		page.should have_content(i)
+	end
+end
+
+
 Then /^(?:|I )should be on (.+)$/ do |page_name|
   current_path = URI.parse(current_url).path
   if current_path.respond_to? :should
